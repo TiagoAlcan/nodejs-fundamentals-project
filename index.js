@@ -1,6 +1,13 @@
-const { Person } = require("./person");
+// const { Person } = require("./person");
+const dotenv = require("dotenv");
 
-const person = new Person("John Doe");
+const connectToDatabase = require("./src/database/connect");
+
+dotenv.config();
+
+connectToDatabase(); // Conectando ao MongoDB
+
+// const person = new Person("John Doe");
 
 // require("./modules/path");
 
@@ -8,6 +15,6 @@ const person = new Person("John Doe");
 
 // require("./modules/http");
 
-require("./modules/express");
+// require("./modules/express");
 
-console.log(person.sayMyName());
+// console.log(person.sayMyName());
