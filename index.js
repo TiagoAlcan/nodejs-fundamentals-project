@@ -15,6 +15,6 @@ connectToDatabase(); // Conectando ao MongoDB
 
 // require("./modules/http");
 
-// require("./modules/express");
+require("./modules/express"); //tem que estar depois do dotenv.config() para pegar as variáveis de ambiente do .env
 
 // console.log(person.sayMyName());
