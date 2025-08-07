@@ -10,25 +10,51 @@ app.get("/home", (req, res) => {
   res.status(200).send("<h1>Hello, World!<h1>"); // Resposta simples para a rota raiz - tem que ser uma string
 });
 
-app.get("/users", (req, res) => {
-  const users = [
-    {
-      name: "John Doe",
-      email: "johndoe@gmail.com",
-    },
-    {
-      name: "Jane Doe",
-      email: "janedoe@gmail.com",
-    },
-  ];
-  res.status(200).json(users); // Enviando a resposta como JSON
-  // Não é necessário definir o tipo de conteúdo, pois o Express já faz isso automaticamente
+app.get("/users", async (req, res) => {
+  try {
+    const user = await UserModel.find({}); // Buscando todos os usuários no banco de dados
+
+    res.status(200).json(user); // Enviando os usuários encontrados como resposta
+  } catch (error) {
+    res.status(500).send(error.message); // Enviando erro caso ocorra (é uma string, por isso o .send)
+  }
+});
+
+app.get("/users/:id", async (req, res) => {
+  // Rota para buscar um usuário específico pelo ID (:id é um parâmetro de rota do express)
+  try {
+    const id = req.params.id; // Obtendo o ID do usuário a partir dos parâmetros da rota
+    const user = await UserModel.findById(id); // Buscando o usuário pelo ID
+    res.status(200).json(user); // Enviando o usuário encontrado como resposta
+  } catch (error) {
+    res.status(500).send(error.message); // Enviando erro caso ocorra
+  }
 });
 
 app.post("/users", async (req, res) => {
   try {
     const user = await UserModel.create(req.body); // Criando um novo usuário com os dados do corpo da requisição (é ima promise, por isso o await)
     res.status(201).json(user); // Enviando o usuário criado como resposta
+  } catch (error) {
+    res.status(500).send(error.message); // Enviando erro caso ocorra
+  }
+});
+
+app.patch("users/:id", async (req, res) => {
+  try {
+    const id = req.params.id; // Obtendo o ID do usuário a partir dos parâmetros da rota
+    const user = await UserModel.findByIDAndUpdate(id, req.body, { new: true }); // Atualizando o usuário com os dados do corpo da requisição (req.body é uma promise, por isso o await e o new: true retorna o usuário atualizado)
+    res.status(200).json(user); // Enviando o usuário atualizado como resposta
+  } catch (error) {
+    res.status(500).send(error.message); // Enviando erro caso ocorra
+  }
+});
+
+app.delete("/users/:id", async (req, res) => {
+  try {
+    const id = req.params.id; // Obtendo o ID do usuário a partir dos parâmetros da rota
+    const user = await UserModel.findByIdAndDelete(id); // Deletando o usuário pelo ID
+    res.status(200).json(user); // Enviando o usuário deletado como resposta
   } catch (error) {
     res.status(500).send(error.message); // Enviando erro caso ocorra
   }
