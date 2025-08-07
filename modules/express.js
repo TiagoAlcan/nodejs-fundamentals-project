@@ -3,6 +3,16 @@ const UserModel = require("../src/models/user.model"); // Importando o modelo Us
 
 const app = express();
 app.use(express.json()); // Necessário para que o Express entenda o corpo da requisição como JSON
+
+app.use((req, res, next) => {
+  //next precisa ser chamado para continuar o fluxo
+  console.log(req.body); // Middleware para logar o corpo da requisição - isso possibilita ver o que está sendo enviado no corpo da requisição
+  console.log(`Request type - ${req.method}`);
+  console.log(`Content type - ${req.headers}`);
+  console.log(` Date new request - ${Date.now()}`);
+  next();
+});
+
 const port = 8080;
 
 app.get("/home", (req, res) => {
