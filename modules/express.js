@@ -4,6 +4,9 @@ const UserModel = require("../src/models/user.model"); // Importando o modelo Us
 const app = express();
 app.use(express.json()); // Necessário para que o Express entenda o corpo da requisição como JSON
 
+app.set("view engine", "ejs"); // Definindo o mecanismo de visualização como EJS (Embedded JavaScript)
+app.set("views", "src/views"); // Definindo o diretório onde as views
+
 app.use((req, res, next) => {
   //next precisa ser chamado para continuar o fluxo
   console.log(req.body); // Middleware para logar o corpo da requisição - isso possibilita ver o que está sendo enviado no corpo da requisição
@@ -18,6 +21,11 @@ const port = 8080;
 app.get("/home", (req, res) => {
   res.contentType("application/html"); // Definindo o tipo de conteúdo como HTML (no Json a gente não define o tipo de conteúdo)
   res.status(200).send("<h1>Hello, World!<h1>"); // Resposta simples para a rota raiz - tem que ser uma string
+});
+
+app.get("/views/users", async (req, res) => {
+  const users = await UserModel.find({}); // Buscando todos os usuários no banco de dados
+  res.render("index", { users }); // Renderizando a view "index" e passando os usuários encontrados como variável
 });
 
 app.get("/users", async (req, res) => {
